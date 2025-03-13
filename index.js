@@ -1,4 +1,6 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 
 app.use(express.json())
@@ -25,6 +27,16 @@ let persons = [
 	number: "39-23-6423122"
 	}
 ]
+
+morgan.token('body', (req) => JSON.stringify(req.body))
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body',{
+	skip: (req) => req.method !== 'POST'
+}))
+
+app.use(morgan('tiny', {
+	skip: (req) => req.method === 'POST'
+}))
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
@@ -60,8 +72,32 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+const generateId = () => {
+	return Math.floor(Math.random() * 1000000)
+}
+
 app.post('/api/persons', (request, response) => {
 	const person = request.body
+
+	if (!person.name || !person.number) {
+		return response.status(400).json({
+			error: 'name or number missing'
+		})
+	}
+
+	if (persons.find(p => p.name === person.name)) {
+		return response.status(400).json({
+			error: 'name is already in the phonebook'
+		})
+	}
+
+	const newPerson = {
+		id: generateId(),
+		name: person.name,
+		number: person.number
+	}
+
+	persons = persons.concat(newPerson)
 	response.json(person)
 })
 
