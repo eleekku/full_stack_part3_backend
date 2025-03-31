@@ -1,13 +1,13 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-
 const app = express()
 
 app.use(cors())
 
 app.use(express.static('dist'))
 app.use(express.json())
+
 
 let persons = [
 	{
@@ -52,7 +52,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(result => {
+	response.json(result)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
