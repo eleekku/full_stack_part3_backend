@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
-const password = process.argv[2]
-const url = env.process.MONGODB_URI
+const url = process.env.MONGODB_URI
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
@@ -22,6 +21,11 @@ const personSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		minlength: 8
+	},
+	_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		auto: true
 	}
 })
 const Person = mongoose.model('Person', personSchema)
+module.exports = Person
