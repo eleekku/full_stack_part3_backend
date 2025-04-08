@@ -49,36 +49,36 @@ app.get('/', (request, response) => {
 app.get('/info', (request, response) => {
   const date = new Date()
   Person.find({}).then(result => {
-	response.send(
-	  `<p>Phonebook has info for ${result.length} people</p>
+    response.send(
+      `<p>Phonebook has info for ${result.length} people</p>
 	  <p>${date}</p>`
-	)
+    )
   })
-  .catch(error => {
-    console.error(error)
-    response.status(500).send({ error: 'malformatted id' })
-  })
+    .catch(error => {
+      console.error(error)
+      response.status(500).send({ error: 'malformatted id' })
+    })
 })
 
 app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(result => {
-  response.json(result)
+    response.json(result)
   }
   )
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-  const id = request.params.id	
+  const id = request.params.id
   Person.findById(id).then(person => {
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
   })
-  .catch(error => next(error))
- 
+    .catch(error => next(error))
+
 })
 
 
@@ -86,15 +86,15 @@ app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   console.log('delete', id)
   Person.findByIdAndDelete(id).then(result => {
-  if (result) {
-    console.log('deleted', result)
-  }
-  else {
-    console.log('not found')
-    return response.status(404).end()
-  }
+    if (result) {
+      console.log('deleted', result)
+    }
+    else {
+      console.log('not found')
+      return response.status(404).end()
+    }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
@@ -103,14 +103,14 @@ app.post('/api/persons', (request, response, next) => {
     return response.status(400).json({ error: 'name or number missing' })
   }
   const person = new Person({
-  name: body.name,
-  number: body.number,
+    name: body.name,
+    number: body.number,
   })
 
   person.save().then(savedPerson => {
-  response.json(savedPerson)
+    response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {

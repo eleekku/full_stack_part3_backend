@@ -41,23 +41,23 @@ if (process.argv.length === 3) {
   return
 }
 
-  Person.findOne({ name: person.name })
+Person.findOne({ name: person.name })
   .then(existingPerson => {
     if (existingPerson) {
-      console.log(`Person with name "${person.name}" already exists.`);
-      mongoose.connection.close();
-      process.exit(1);
+      console.log(`Person with name "${person.name}" already exists.`)
+      mongoose.connection.close()
+      process.exit(1)
     } else {
-      return person.save();
+      return person.save()
     }
   })
   .then(result => {
     if (result) {
-      console.log(`Added ${person.name} number ${person.number} to phonebook`);
+      console.log(`Added ${person.name} number ${person.number} to phonebook`)
     }
-    mongoose.connection.close();
+    mongoose.connection.close()
   })
   .catch(error => {
-    console.error('Error:', error.message);
-    mongoose.connection.close();
-  });
+    console.error('Error:', error.message)
+    mongoose.connection.close()
+  })
